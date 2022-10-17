@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { DraftFunction, useImmer, Updater } from 'use-immer'
+import { DraftFunction, Updater, useImmer } from 'use-immer'
 
 function buildMutate<State>(setState: Updater<State>) {
   return (f: DraftFunction<State>) => {
@@ -19,25 +19,25 @@ function buildMerge<State>(setState: Updater<State>) {
   }
 }
 
-export function useStore<State>(initState: State) {
-  const [state, setState] = useImmer(initState)
+export function useStore<State>(defaultState: State) {
+  const [state, setState] = useImmer(defaultState)
   return { state, mutate: buildMutate(setState), merge: buildMerge(setState) }
 }
 
-export function createContextStore<State>(initState: State) {
+export function createContextStore<State>(defaultState: State) {
   const StateContext = createContext<{
     state: State
     mutate: (f: DraftFunction<State>) => void
     merge: (p: Partial<State>) => void
   }>({
-    state: initState,
+    state: defaultState,
     mutate: () => undefined,
     merge: () => undefined,
   })
 
   return {
     Store({ children }) {
-      const [state, setState] = useImmer(initState)
+      const [state, setState] = useImmer(defaultState)
 
       return (
         <StateContext.Provider

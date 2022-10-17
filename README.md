@@ -4,6 +4,12 @@ This library is an experiment attempting to solve the problem of a "gap" between
 
 React Store is a _very_ light wrapper around Immer and exposes a consistent storage interface.
 
+## When should I use this?
+
+`useStore` is useful when you want a bit more convenience over `useImmer`. `useImmer` does not have a concept of `merge`, taking a data partial. Also, `mutate` return is ignored, while the `useImmer` set-function return is affecting. (If you want to leverage the `useImmer` return functionality, you should use Immer.)
+
+`createContextStore` is a useful abstraction over the "migration to contexts". It's a simple transition from `useStore` to `useStore`, with no changes in behavior, but now in a reusable context-based store.
+
 ## API
 
 ### `useStore`

@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "ES6",
+    "module": "node16",
+    "declaration": true,
+    "lib": ["es2017", "dom"],
+    "jsx": "react-jsx",
+    "allowUmdGlobalAccess": true
+  },
+  "include": ["lib/**/*", "tests/test.tsx"]
+}

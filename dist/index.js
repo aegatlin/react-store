@@ -17,23 +17,32 @@ function buildMerge(setState) {
         });
     };
 }
-export function useStore(initState) {
-    const [state, setState] = useImmer(initState);
+/**
+ * @function useStore
+ * @param {State} defaultState - the initial state
+ * @returns {UseStoreReturn<State>} { state, mutate, merge }
+ */
+export function useStore(defaultState) {
+    const [state, setState] = useImmer(defaultState);
     return { state, mutate: buildMutate(setState), merge: buildMerge(setState) };
 }
-export function createContextStore(initState) {
+/**
+ * @function createContextStore
+ * @param {State} defaultState - the initial state
+ */
+export function createContextStore(defaultState) {
     const StateContext = createContext({
-        state: initState,
+        state: defaultState,
         mutate: () => undefined,
         merge: () => undefined,
     });
     return {
-        Store({ children }) {
-            const [state, setState] = useImmer(initState);
+        Store({ state, children }) {
+            const [_state, _setState] = useImmer(state || defaultState);
             return (_jsx(StateContext.Provider, Object.assign({ value: {
-                    state,
-                    mutate: buildMutate(setState),
-                    merge: buildMerge(setState),
+                    state: _state,
+                    mutate: buildMutate(_setState),
+                    merge: buildMerge(_setState),
                 } }, { children: children })));
         },
         useStore() {

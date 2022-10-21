@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 import { DraftFunction, Updater, useImmer } from 'use-immer'
 
 function buildMutate<State>(setState: Updater<State>) {
@@ -19,11 +19,26 @@ function buildMerge<State>(setState: Updater<State>) {
   }
 }
 
-export function useStore<State>(defaultState: State) {
+interface UseStoreReturn<State> {
+  state: State
+  merge: (partial: Partial<State>) => void
+  mutate: (f: DraftFunction<State>) => void
+}
+
+/**
+ * @function useStore
+ * @param {State} defaultState - the initial state
+ * @returns {UseStoreReturn<State>} { state, mutate, merge }
+ */
+export function useStore<State>(defaultState: State): UseStoreReturn<State> {
   const [state, setState] = useImmer(defaultState)
   return { state, mutate: buildMutate(setState), merge: buildMerge(setState) }
 }
 
+/**
+ * @function createContextStore
+ * @param {State} defaultState - the initial state
+ */
 export function createContextStore<State>(defaultState: State) {
   const StateContext = createContext<{
     state: State
@@ -36,15 +51,15 @@ export function createContextStore<State>(defaultState: State) {
   })
 
   return {
-    Store({ children }) {
-      const [state, setState] = useImmer(defaultState)
+    Store({ state, children }: { state?: State; children: ReactNode }) {
+      const [_state, _setState] = useImmer(state || defaultState)
 
       return (
         <StateContext.Provider
           value={{
-            state,
-            mutate: buildMutate(setState),
-            merge: buildMerge(setState),
+            state: _state,
+            mutate: buildMutate(_setState),
+            merge: buildMerge(_setState),
           }}
         >
           {children}

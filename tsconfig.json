@@ -8,5 +8,5 @@
     "jsx": "react-jsx",
     "allowUmdGlobalAccess": true
   },
-  "include": ["lib/**/*", "tests/test.tsx"]
+  "include": ["lib/**/*"]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@aegatlin/react-store",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React storage solution wrapping Immer",
   "main": "dist/index.js",
   "homepage": "",

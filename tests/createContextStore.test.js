@@ -1,6 +1,6 @@
 import assert from 'assert/strict'
 import { describe, it } from 'node:test'
-import React, { useEffect } from 'react'
+import { createElement, useEffect } from 'react'
 import { create } from 'react-test-renderer'
 import { createContextStore } from '../dist/index.js'
 
@@ -9,20 +9,16 @@ describe('createContextStore', () => {
     const { Store, useStore } = createContextStore({ a: 1 })
 
     function Parent() {
-      return React.createElement(
-        Store,
-        null,
-        React.createElement(Child, null, null)
-      )
+      return createElement(Store, null, createElement(Child, null, null))
     }
 
     function Child() {
       const { state, merge } = useStore()
       useEffect(() => merge({ a: 5 }), [])
-      return React.createElement('div', { a: state.a }, null)
+      return createElement('div', { a: state.a }, null)
     }
 
-    const c = React.createElement(Parent, null, null)
+    const c = createElement(Parent, null, null)
     const testRenderer = create(c)
     let actual = testRenderer.root.findByType('div').props.a
 
@@ -38,20 +34,16 @@ describe('createContextStore', () => {
     const { Store, useStore } = createContextStore({ a: 1 })
 
     function Parent() {
-      return React.createElement(
-        Store,
-        null,
-        React.createElement(Child, null, null)
-      )
+      return createElement(Store, null, createElement(Child, null, null))
     }
 
     function Child() {
       const { state, mutate } = useStore()
       useEffect(() => mutate((s) => (s.a = 6)), [])
-      return React.createElement('div', { a: state.a }, null)
+      return createElement('div', { a: state.a }, null)
     }
 
-    const c = React.createElement(Parent, null, null)
+    const c = createElement(Parent, null, null)
     const testRenderer = create(c)
     let actual = testRenderer.root.findByType('div').props.a
 
@@ -67,20 +59,20 @@ describe('createContextStore', () => {
     const { Store, useStore } = createContextStore({ a: 1 })
 
     function Parent() {
-      return React.createElement(
+      return createElement(
         Store,
         { state: { a: 2 } },
-        React.createElement(Child, null, null)
+        createElement(Child, null, null)
       )
     }
 
     function Child() {
       const { state, merge } = useStore()
       useEffect(() => merge({ a: 7 }), [])
-      return React.createElement('div', { a: state.a }, null)
+      return createElement('div', { a: state.a }, null)
     }
 
-    const c = React.createElement(Parent, null, null)
+    const c = createElement(Parent, null, null)
     const testRenderer = create(c)
     let actual = testRenderer.root.findByType('div').props.a
 

@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react'
+import assert from 'node:assert/strict'
+import { describe, it } from 'node:test'
+import { createElement, useEffect } from 'react'
 import { create } from 'react-test-renderer'
 import { useStore } from '../dist/index.js'
-import assert from 'assert/strict'
-import { it, describe } from 'node:test'
 
 describe('useStore', () => {
   it('updates via mutate', () => {
     function C() {
       const { state, mutate } = useStore({ a: 1 })
       useEffect(() => mutate((s) => (s.a = 3)), [])
-      return React.createElement('div', { a: state.a }, null)
+      return createElement('div', { a: state.a }, null)
     }
 
-    const c = React.createElement(C, null, null)
+    const c = createElement(C, null, null)
     const testRenderer = create(c)
     let actual = testRenderer.root.findByType('div').props.a
 
@@ -28,10 +28,10 @@ describe('useStore', () => {
     function C() {
       const { state, merge } = useStore({ a: 1 })
       useEffect(() => merge({ a: 4 }), [])
-      return React.createElement('div', { a: state.a }, null)
+      return createElement('div', { a: state.a }, null)
     }
 
-    const c = React.createElement(C, null, null)
+    const c = createElement(C, null, null)
     const testRenderer = create(c)
     let actual = testRenderer.root.findByType('div').props.a
 
